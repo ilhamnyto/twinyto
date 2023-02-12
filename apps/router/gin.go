@@ -27,11 +27,12 @@ func NewRouterGin(db *database.Database, port string) *Gin {
 func (g *Gin) BuildRoutes() {
 	g.router.Use(CORS)
 
-	v1 := g.router.Group("api/v1/ping")
+	v1 := g.router.Group("api/v1")
 
-	v1.GET("/", func(ctx *gin.Context) {
+	v1.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H {"message": "Hello twinyto."})
 	})
+
 }
 
 func (g *Gin) Run() {
