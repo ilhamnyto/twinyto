@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ilhamnyto/twinyto/apps/commons/middleware"
+	"github.com/ilhamnyto/twinyto/apps/domain/auth"
 	"github.com/ilhamnyto/twinyto/pkg/database"
 )
 
@@ -33,6 +34,9 @@ func (g *Gin) BuildRoutes() {
 		ctx.JSON(200, gin.H {"message": "Hello twinyto."})
 	})
 
+	authPath := v1.Group("/auth")
+	authRouter := auth.NewAuthRouter(authPath, g.db.DbSQL, g.middleware)
+	authRouter.RegisterRoute()
 }
 
 func (g *Gin) Run() {

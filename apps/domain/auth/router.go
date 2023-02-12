@@ -34,5 +34,7 @@ func NewAuthRouter(route *gin.RouterGroup, db *sql.DB, middleware *middleware.Mi
 func (a *authRouter) RegisterRoute() {
 	a.route.POST("/login", a.controller.Login)
 	a.route.POST("/register", a.controller.Register)
+
+	a.route.Use(a.middleware.ValidateAuth)
 	a.route.POST("/reset-password", a.controller.ResetPassword)
 }
