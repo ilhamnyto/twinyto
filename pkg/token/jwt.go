@@ -60,7 +60,7 @@ func ValidateToken(tokenString string) (*Payload, error) {
 			return nil, err
 		}
 
-		err = json.Unmarshal(payloadByte, payload)
+		err = json.Unmarshal(payloadByte, &payload)
 
 		if err != nil {
 			return nil, err
