@@ -22,7 +22,7 @@ var (
 	`
 
 	queryFindByUsername = `
-		SELECT username, email, img_url from users WHERE username = &1
+		SELECT username, email, img_url from users WHERE username = $1
 	`
 )
 
@@ -67,7 +67,7 @@ func (r *profileRepo) FindUser(ctx context.Context, username string) ([]*entity.
 		return nil, err
 	}
 
-	rows, err := stmt.Query(username)
+	rows, err := stmt.Query("%"+username+"%")
 
 	if err != nil {
 		return nil, err

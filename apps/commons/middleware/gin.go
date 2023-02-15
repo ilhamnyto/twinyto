@@ -21,7 +21,7 @@ func (m *MiddlewareGin) ValidateAuth(ctx *gin.Context) {
 	t := strings.Split(tokenString, "Bearer ")
 
 	if len(t) < 2 {
-		resp := response.GeneralErrorWithAdditionalInfo("invalid len of token.")
+		resp := response.GeneralErrorWithAdditionalInfo("Invalid token.")
 		ctx.AbortWithStatusJSON(resp.StatusCode, resp)
 		return
 	}
