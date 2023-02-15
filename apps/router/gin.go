@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ilhamnyto/twinyto/apps/commons/middleware"
 	"github.com/ilhamnyto/twinyto/apps/domain/auth"
+	"github.com/ilhamnyto/twinyto/apps/domain/profile"
 	"github.com/ilhamnyto/twinyto/pkg/database"
 )
 
@@ -37,6 +38,10 @@ func (g *Gin) BuildRoutes() {
 	authPath := v1.Group("/auth")
 	authRouter := auth.NewAuthRouter(authPath, g.db.DbSQL, g.middleware)
 	authRouter.RegisterRoute()
+
+	profilePath := v1.Group("/user")
+	profileRouter := profile.NewProfileRouter(profilePath, g.db.DbSQL, g.middleware)
+	profileRouter.RegisterRoute()
 }
 
 func (g *Gin) Run() {
