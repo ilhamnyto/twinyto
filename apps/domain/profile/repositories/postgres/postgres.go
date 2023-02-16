@@ -24,6 +24,14 @@ var (
 	queryFindByUsername = `
 		SELECT username, email, img_url from users WHERE username = $1
 	`
+
+	queryGetFollowerByUserId = `
+		SELECT u.username, u.email, u.img_url from users as u LEFT JOIN follow as f ON u.id = f.user_id WHERE f.following_id = $1
+	`
+
+	queryGetFollowerByUsername = `
+	SELECT u.username, u.email, u.img_url from users as u LEFT JOIN follow as f ON u.id = f.user_id WHERE f.following_id = $1
+	`
 )
 
 type profileRepo struct {
@@ -152,4 +160,35 @@ func (r *profileRepo) FindByUsername(ctx context.Context, username string) (*ent
 	}
 
 	return &user, nil
+}
+
+func (r *profileRepo) GetFollower(ctx context.Context, userId int) ([]*entity.Profile, error) {
+	stmt, err := r.db.Prepare(queryGetFollowerByUserId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := stmt.Query(userId)
+
+	defer rows.Close()
+
+	var users []*entity.Profile
+
+	for rows.Next() {
+		tempUser := new(entity.Profile)
+		err := rows.Scan(
+			&tempUser.Username,
+			&tempUser.Email,
+			&tempUser.ImgUrl,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, tempUser)
+	}
+
+	return users, nil
 }

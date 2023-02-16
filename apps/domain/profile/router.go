@@ -37,4 +37,5 @@ func (p *profileRouter) RegisterRoute() {
 	p.router.GET("/profile", p.controller.UserProfile)
 	p.router.POST("/search", p.controller.SearchProfile)
 	p.router.GET("/list", p.controller.UserProfileList)
+	p.router.GET("/follower", p.controller.UserFollowerList)
 }

@@ -74,3 +74,17 @@ func (c *ControllerAPI) UserProfileList(ctx *gin.Context) {
 	resp := response.GeneralSuccessWithCustomMessageAndPayload("SUCCESS", result)
 	ctx.JSON(resp.StatusCode, resp)
 }
+
+func (c *ControllerAPI) UserFollowerList(ctx *gin.Context) {
+	userId := ctx.GetInt("UserID")
+
+	result, custErr := c.svc.UserFollowerList(ctx.Request.Context(), userId)
+
+	if custErr != nil {
+		ctx.AbortWithStatusJSON(custErr.StatusCode, custErr)
+		return
+	}
+
+	resp := response.GeneralSuccessWithCustomMessageAndPayload("SUCCESS", result)
+	ctx.JSON(resp.StatusCode, resp)
+}
