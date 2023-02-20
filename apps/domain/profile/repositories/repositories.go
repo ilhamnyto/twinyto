@@ -12,4 +12,5 @@ type ProfileRepo interface {
 	FindUser(ctx context.Context, username string) ([]*entity.Profile, error)
 	GetAllUser(ctx context.Context) ([]*entity.Profile, error)
 	GetFollower(ctx context.Context, userId int) ([]*entity.Profile, error)
+	GetUserIdByUsername(ctx context.Context, username string) (int, error)
 }

@@ -13,4 +13,5 @@ type ProfileSvc interface {
 	SearchProfile(ctx context.Context, req *params.UserProfileRequest) ([]*params.UserProfileResponse, *response.CustomError)
 	UserProfileList(ctx context.Context) ([]*params.UserProfileResponse, *response.CustomError)
 	UserFollowerList(ctx context.Context, userId int)([]*params.UserProfileResponse, *response.CustomError)
+	UserFollowerByUsername(ctx context.Context, username string)([]*params.UserProfileResponse, *response.CustomError)
 }

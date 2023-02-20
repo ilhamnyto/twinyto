@@ -29,8 +29,8 @@ var (
 		SELECT u.username, u.email, u.img_url from users as u LEFT JOIN follow as f ON u.id = f.user_id WHERE f.following_id = $1
 	`
 
-	queryGetFollowerByUsername = `
-	SELECT u.username, u.email, u.img_url from users as u LEFT JOIN follow as f ON u.id = f.user_id WHERE f.following_id = $1
+	queryGetIdByUsername = `
+	SELECT id from users where username = $1
 	`
 )
 
@@ -191,4 +191,26 @@ func (r *profileRepo) GetFollower(ctx context.Context, userId int) ([]*entity.Pr
 	}
 
 	return users, nil
+}
+
+func(r *profileRepo) GetUserIdByUsername(ctx context.Context, username string) (int, error) {
+	stmt, err := r.db.Prepare(queryGetIdByUsername)
+
+	if err != nil {
+		return 0, err
+	}
+
+	row := stmt.QueryRow(username)
+
+	var id int
+
+	err = row.Scan(
+		&id,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

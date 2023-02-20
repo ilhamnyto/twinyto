@@ -124,3 +124,40 @@ func (s *profileSvc) UserFollowerList(ctx context.Context, userId int) ([]*param
 
 	return users, nil
 }
+
+func (s *profileSvc) UserFollowerByUsername(ctx context.Context, username string) ([]*params.UserProfileResponse, *response.CustomError) {
+	userId, err := s.repo.GetUserIdByUsername(ctx, username)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, response.NotFoundError()
+		}
+
+		return nil, response.RepositoryErrorWithAdditionalInfo(err.Error())
+	}
+
+	result, err := s.repo.GetFollower(ctx, userId)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, response.NotFoundError()
+		}
+
+		return nil, response.RepositoryErrorWithAdditionalInfo(err.Error())
+	}
+
+	var followers []*params.UserProfileResponse
+
+	for _, user := range result {
+		tempUser := new(params.UserProfileResponse)
+		tempUser.ParseFromModel(user)
+
+		followers = append(followers, tempUser)
+	}
+
+	if followers == nil {
+		followers = []*params.UserProfileResponse{}
+	}
+
+	return followers, nil
+}
