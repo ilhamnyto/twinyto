@@ -10,11 +10,19 @@ import (
 
 var (
 	queryCreate = `
-		INSERT INTO users (username, email, img_url, password) VALUES($1, $2, $3, $4)
+		INSERT INTO users (username, email, img_url, password, created_at) VALUES($1, $2, $3, $4, $5)
 	`
 
 	queryFindByUsername = `
 		SELECT id, password from users where username = $1
+	`
+
+	queryCheckUsername = `
+		SELECT id from users where username = $1
+	`
+
+	queryCheckEmail = `
+		SELECT id from users where email = $1
 	`
 
 	queryUpdatePassword = `
@@ -43,7 +51,7 @@ func (a *authRepo) Create(ctx context.Context, user *entity.User) error {
 		return err
 	}
 
-	_, err = stmt.Exec(user.Username, user.Email, user.ImgUrl, user.Password)
+	_, err = stmt.Exec(user.Username, user.Email, user.ImgUrl, user.Password, user.CreatedAt)
 
 	if err != nil {
 		return err
@@ -107,4 +115,40 @@ func (a *authRepo) GetPassword(ctx context.Context, userid int) (string, error) 
 	)
 
 	return password, nil
+}
+
+func (a *authRepo) CheckUsernme(ctx context.Context, username string) (error) {
+	stmt, err := a.db.Prepare(queryCheckUsername)
+
+	if err != nil {
+		return err
+	}
+
+	row := stmt.QueryRow(username)
+
+	var exist string
+
+	if err = row.Scan(&exist); err != nil {
+		return err
+	} 
+
+	return nil
+}
+
+func (a *authRepo) CheckEmail(ctx context.Context, email string) (error) {
+	stmt, err := a.db.Prepare(queryCheckEmail)
+
+	if err != nil {
+		return err
+	}
+
+	row := stmt.QueryRow(email)
+
+	var exist string
+
+	if err = row.Scan(&exist); err != nil {
+		return err
+	} 
+
+	return nil
 }

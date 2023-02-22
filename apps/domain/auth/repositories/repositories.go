@@ -11,4 +11,6 @@ type AuthRepo interface {
 	FindByUsername(ctx context.Context, username string) (*entity.User, error)
 	UpdatePassword(ctx context.Context, password string, userid int) error
 	GetPassword(ctx context.Context, userid int) (string, error)
+	CheckUsernme(ctx context.Context, username string) (error)
+	CheckEmail(ctx context.Context, email string) (error)
 }

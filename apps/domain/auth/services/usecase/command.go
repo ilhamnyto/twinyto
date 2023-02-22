@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/ilhamnyto/twinyto/apps/commons/response"
 	"github.com/ilhamnyto/twinyto/apps/domain/auth/params"
@@ -17,6 +18,16 @@ func (s *authSvc) Register(ctx context.Context, req *params.UserRegisterRequest)
 	if len (req.Password) < 5 {
 		return response.GeneralErrorWithAdditionalInfo("password should have at least 5 characters.")
 	}
+
+	loc, err := time.LoadLocation("Asia/Jakarta")
+
+	if err != nil {
+		return response.GeneralErrorWithAdditionalInfo(err.Error())
+	}
+
+	createdat := time.Now().In(loc)
+	req.CreatedAt = createdat
+
 	user := req.ParseToModel()
 	user.ImgUrl = "https://fastly.picsum.photos/id/630/500/500.jpg?hmac=_e8WfDqIZfqQ0doa8XEoc4JEw2SQq2ud7QplFmfS6Ag"
 
@@ -27,8 +38,6 @@ func (s *authSvc) Register(ctx context.Context, req *params.UserRegisterRequest)
 	}
 
 	user.Password = hash
-
-	print(user)
 
 	err = s.repo.Create(ctx, user)
 

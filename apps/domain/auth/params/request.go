@@ -1,6 +1,10 @@
 package params
 
-import "github.com/ilhamnyto/twinyto/apps/domain/auth/entity"
+import (
+	"time"
+
+	"github.com/ilhamnyto/twinyto/apps/domain/auth/entity"
+)
 
 type UserLoginRequest struct {
 	Username string `json:"username"`
@@ -13,6 +17,7 @@ type UserRegisterRequest struct {
 	Password string `json:"password"`
 	ConfirmPassword string `json:"confirm_password"`
 	ImgUrl string `json:"image_url"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (u *UserRegisterRequest) ParseToModel() *entity.User {
@@ -21,6 +26,7 @@ func (u *UserRegisterRequest) ParseToModel() *entity.User {
 		Email: u.Email,
 		Password: u.Password,
 		ImgUrl: u.ImgUrl,
+		CreatedAt: u.CreatedAt,
 	}
 }
 
