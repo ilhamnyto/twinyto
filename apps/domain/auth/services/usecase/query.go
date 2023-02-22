@@ -15,7 +15,7 @@ func (s *authSvc) Login(ctx context.Context, req *params.UserLoginRequest) (*par
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, response.NotFoundError()
+			return nil, response.NotFoundErrorWithAdditionalInfo("Username doesn't exists.")
 		}
 
 		return nil, response.RepositoryErrorWithAdditionalInfo(err.Error())
